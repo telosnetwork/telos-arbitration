@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(eosio_contracts)
+project(eosio_arb)
+
+include(ExternalProject)
 
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 7)
@@ -13,11 +15,9 @@ else()
    set(VERSION_FULL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 endif()
 
-include(ExternalProject)
-
 find_package(eosio.cdt)
 
-message(STATUS "Building eosio.contracts v${VERSION_FULL}")
+message(STATUS "Building eosio.arbitration v${VERSION_FULL}")
 
 set(EOSIO_CDT_VERSION_MIN "1.6")
 set(EOSIO_CDT_VERSION_SOFT_MAX "1.6")
@@ -47,8 +47,8 @@ endif()
 
 ExternalProject_Add(
    contracts_project
-   SOURCE_DIR ${CMAKE_SOURCE_DIR}/contracts
-   BINARY_DIR ${CMAKE_BINARY_DIR}/contracts
+   SOURCE_DIR ${CMAKE_SOURCE_DIR}/libs
+   BINARY_DIR ${CMAKE_BINARY_DIR}/libs
    CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${EOSIO_CDT_ROOT}/lib/cmake/eosio.cdt/EosioWasmToolchain.cmake
    UPDATE_COMMAND ""
    PATCH_COMMAND ""
@@ -56,6 +56,36 @@ ExternalProject_Add(
    INSTALL_COMMAND ""
    BUILD_ALWAYS 1
 )
+
+add_contract(
+    eosio.arbitration
+    eosio.arbitration
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/eosio.arbitration.cpp)
+
+target_compile_options(
+    eosio.arbitration.wasm
+    PUBLIC
+    -R${CMAKE_CURRENT_SOURCE_DIR}/resources)
+
+target_compile_options(
+    eosio.arbitration.wasm
+    PUBLIC
+    -Wunknown-pragmas)
+
+target_include_directories(
+    eosio.arbitration.wasm
+   PUBLIC
+   ${CMAKE_CURRENT_SOURCE_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/libs/eosio.trail/include)
+
+set_target_properties(
+    eosio.arbitration.wasm
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
+##############
+# TEST STUFF #
+##############
 
 if (APPLE)
    set(OPENSSL_ROOT "/usr/local/opt/openssl")
