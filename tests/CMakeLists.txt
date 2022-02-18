@@ -39,3 +39,4 @@ foreach(TEST_SUITE ${UNIT_TESTS}) # create an independent target for each test s
     add_test(NAME ${TRIMMED_SUITE_NAME}_unit_test COMMAND unit_test --run_test=${SUITE_NAME} --report_level=detailed --color_output)
   endif()
 endforeach(TEST_SUITE)
+
