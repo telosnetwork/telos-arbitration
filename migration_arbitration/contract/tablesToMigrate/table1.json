@@ -1,0 +1,9 @@
+{
+    "tableStruct": "config",
+    "supportTableStruct": "supportconf",
+    "tableName": "config",
+    "supportTableName": "supportconf",
+    "tableType": "config_singleton",
+    "supportTableType": "support_config_singleton"
+}
+

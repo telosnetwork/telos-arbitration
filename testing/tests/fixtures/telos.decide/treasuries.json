@@ -1,0 +1,19 @@
+{
+    "telos.decide": [{
+        "supply": "73244108.9089 VOTE",
+        "max_supply": "10000000000.0000 VOTE",
+        "access": "public",
+        "manager": "",
+        "title": "Telos Governance Token",
+        "description": "Description",
+        "icon": "icon",
+        "voters": 643,
+        "delegates": 0,
+        "committees": 0,
+        "open_ballots": 0,
+        "locked": false,
+        "unlock_acct": "eosio",
+        "unlock_auth": "active",
+        "settings": [ { "key": "burnable", "value": 0 }, { "key": "maxmutable", "value": 0 }, { "key": "reclaimable", "value": 0 }, { "key": "stakeable", "value": 0 }, { "key": "transferable", "value": 0 }, { "key": "unstakeable", "value": 0 } ]
+    }]
+}

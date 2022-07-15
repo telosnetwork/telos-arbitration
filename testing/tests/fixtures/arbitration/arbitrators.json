@@ -1,0 +1,15 @@
+{
+    "arbitration": [
+        {   
+            "arb": "user3",
+            "arb_status": 1,
+            "open_case_ids": ["0"],
+            "closed_case_ids": [],
+            "recused_case_ids": [],
+            "credentials_link": "link",
+            "elected_time": "1999-01-01T00:00:00.000",
+            "term_expiration":"2001-01-01T00:00:00.000",
+            "languages": [0,1]
+        }
+    ]
+}

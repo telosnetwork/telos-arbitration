@@ -1,0 +1,22 @@
+{
+    "arbitration": [
+        {
+            "balance": "50.0000 TLOS"
+        }
+    ],
+    "user1": [
+        {
+            "balance": "50.0000 TLOS"
+        }
+    ],
+    "user2": [
+        {
+            "balance": "50.0000 TLOS"
+        }
+    ],
+    "admin": [
+        {
+            "balance": "50.0000 TLOS"
+        }
+    ]
+}

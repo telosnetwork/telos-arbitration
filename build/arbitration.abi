@@ -1,0 +1,1180 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
+    "version": "eosio::abi/1.2",
+    "types": [],
+    "structs": [
+        {
+            "name": "account",
+            "base": "",
+            "fields": [
+                {
+                    "name": "balance",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "addclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_link",
+                    "type": "string"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                },
+                {
+                    "name": "claim_category",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "arbitrator",
+            "base": "",
+            "fields": [
+                {
+                    "name": "arb",
+                    "type": "name"
+                },
+                {
+                    "name": "arb_status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "open_case_ids",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "closed_case_ids",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "recused_case_ids",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "credentials_link",
+                    "type": "string"
+                },
+                {
+                    "name": "elected_time",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "term_expiration",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "languages",
+                    "type": "uint16[]"
+                }
+            ]
+        },
+        {
+            "name": "beginvoting",
+            "base": "",
+            "fields": [
+                {
+                    "name": "ballot_name",
+                    "type": "name"
+                },
+                {
+                    "name": "runoff",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "cancelcase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "candaddlead",
+            "base": "",
+            "fields": [
+                {
+                    "name": "nominee",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "candidate",
+            "base": "",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "name"
+                },
+                {
+                    "name": "votes",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "candrmvlead",
+            "base": "",
+            "fields": [
+                {
+                    "name": "nominee",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "casefile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "case_status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                },
+                {
+                    "name": "respondant",
+                    "type": "name"
+                },
+                {
+                    "name": "arbitrators",
+                    "type": "name[]"
+                },
+                {
+                    "name": "approvals",
+                    "type": "name[]"
+                },
+                {
+                    "name": "number_claims",
+                    "type": "uint8"
+                },
+                {
+                    "name": "number_offers",
+                    "type": "uint8"
+                },
+                {
+                    "name": "required_langs",
+                    "type": "uint16[]"
+                },
+                {
+                    "name": "case_ruling",
+                    "type": "string"
+                },
+                {
+                    "name": "fee_paid_tlos",
+                    "type": "asset"
+                },
+                {
+                    "name": "update_ts",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "sending_offers_until_ts",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "claim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_summary",
+                    "type": "string"
+                },
+                {
+                    "name": "decision_link",
+                    "type": "string"
+                },
+                {
+                    "name": "response_link",
+                    "type": "string"
+                },
+                {
+                    "name": "claimant_limit_time",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "claim_info_needed",
+                    "type": "bool"
+                },
+                {
+                    "name": "respondant_limit_time",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "response_info_needed",
+                    "type": "bool"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "claim_category",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "closecase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "admin",
+                    "type": "name"
+                },
+                {
+                    "name": "contract_version",
+                    "type": "string"
+                },
+                {
+                    "name": "max_elected_arbs",
+                    "type": "uint16"
+                },
+                {
+                    "name": "election_voting_ts",
+                    "type": "uint32"
+                },
+                {
+                    "name": "runoff_election_voting_ts",
+                    "type": "uint32"
+                },
+                {
+                    "name": "election_add_candidates_ts",
+                    "type": "uint32"
+                },
+                {
+                    "name": "arb_term_length",
+                    "type": "uint32"
+                },
+                {
+                    "name": "claimant_accepting_offers_ts",
+                    "type": "uint32"
+                },
+                {
+                    "name": "current_election_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "max_claims_per_case",
+                    "type": "uint8"
+                },
+                {
+                    "name": "fee_usd",
+                    "type": "asset"
+                },
+                {
+                    "name": "available_funds",
+                    "type": "asset"
+                },
+                {
+                    "name": "reserved_funds",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "deletecase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "dismissarb",
+            "base": "",
+            "fields": [
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                },
+                {
+                    "name": "remove_from_cases",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "dismisscase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                },
+                {
+                    "name": "case_ruling",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "dismissoffer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "election",
+            "base": "",
+            "fields": [
+                {
+                    "name": "election_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "ballot_name",
+                    "type": "name"
+                },
+                {
+                    "name": "info_url",
+                    "type": "string"
+                },
+                {
+                    "name": "candidates",
+                    "type": "candidate[]"
+                },
+                {
+                    "name": "available_seats",
+                    "type": "uint8"
+                },
+                {
+                    "name": "begin_add_candidates_ts",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "end_add_candidates_ts",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "begin_voting_ts",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "end_voting_ts",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "endelection",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "filecase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "claimant",
+                    "type": "name"
+                },
+                {
+                    "name": "claim_link",
+                    "type": "string"
+                },
+                {
+                    "name": "lang_codes",
+                    "type": "uint16[]"
+                },
+                {
+                    "name": "respondant",
+                    "type": "name?"
+                },
+                {
+                    "name": "claim_category",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "forcerecusal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "rationale",
+                    "type": "string"
+                },
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "init",
+            "base": "",
+            "fields": [
+                {
+                    "name": "initial_admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "initelection",
+            "base": "",
+            "fields": [
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "joinder",
+            "base": "",
+            "fields": [
+                {
+                    "name": "join_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "cases",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "join_time",
+                    "type": "uint32"
+                },
+                {
+                    "name": "joined_by",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "makeoffer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "int64"
+                },
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                },
+                {
+                    "name": "hourly_rate",
+                    "type": "asset"
+                },
+                {
+                    "name": "estimated_hours",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "newarbstatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                },
+                {
+                    "name": "new_status",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "nominee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "nominee_name",
+                    "type": "name"
+                },
+                {
+                    "name": "credentials_link",
+                    "type": "string"
+                },
+                {
+                    "name": "application_time",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "offer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                },
+                {
+                    "name": "estimated_hours",
+                    "type": "uint8"
+                },
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                },
+                {
+                    "name": "hourly_rate",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "readycase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "recuse",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "rationale",
+                    "type": "string"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "regarb",
+            "base": "",
+            "fields": [
+                {
+                    "name": "nominee",
+                    "type": "name"
+                },
+                {
+                    "name": "credentials_link",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "removeclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "respond",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "respondant",
+                    "type": "name"
+                },
+                {
+                    "name": "response_link",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "respondoffer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "accept",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "reviewclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                },
+                {
+                    "name": "claim_info_needed",
+                    "type": "bool"
+                },
+                {
+                    "name": "response_info_needed",
+                    "type": "bool"
+                },
+                {
+                    "name": "number_days_claimant",
+                    "type": "uint8"
+                },
+                {
+                    "name": "number_days_respondant",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "setadmin",
+            "base": "",
+            "fields": [
+                {
+                    "name": "new_admin",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "setconfig",
+            "base": "",
+            "fields": [
+                {
+                    "name": "max_elected_arbs",
+                    "type": "uint16"
+                },
+                {
+                    "name": "election_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "runoff_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "election_add_candidates_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "arbitrator_term_length",
+                    "type": "uint32"
+                },
+                {
+                    "name": "max_claims_per_case",
+                    "type": "uint8"
+                },
+                {
+                    "name": "fee_usd",
+                    "type": "asset"
+                },
+                {
+                    "name": "claimant_accepting_offers_duration",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "setlangcodes",
+            "base": "",
+            "fields": [
+                {
+                    "name": "arbitrator",
+                    "type": "name"
+                },
+                {
+                    "name": "lang_codes",
+                    "type": "uint16[]"
+                }
+            ]
+        },
+        {
+            "name": "setruling",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                },
+                {
+                    "name": "case_ruling",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "settleclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                },
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "accept",
+                    "type": "bool"
+                },
+                {
+                    "name": "decision_link",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "setversion",
+            "base": "",
+            "fields": [
+                {
+                    "name": "new_version",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "shredcase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "skiptovoting",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "startcase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "assigned_arb",
+                    "type": "name"
+                },
+                {
+                    "name": "number_days_respondant",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "unregnominee",
+            "base": "",
+            "fields": [
+                {
+                    "name": "nominee",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "updateclaim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "case_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claim_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "claimant",
+                    "type": "name"
+                },
+                {
+                    "name": "claim_link",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "withdraw",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "addclaim",
+            "type": "addclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "beginvoting",
+            "type": "beginvoting",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "cancelcase",
+            "type": "cancelcase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "candaddlead",
+            "type": "candaddlead",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "candrmvlead",
+            "type": "candrmvlead",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "closecase",
+            "type": "closecase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "deletecase",
+            "type": "deletecase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dismissarb",
+            "type": "dismissarb",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dismisscase",
+            "type": "dismisscase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "dismissoffer",
+            "type": "dismissoffer",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "endelection",
+            "type": "endelection",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "filecase",
+            "type": "filecase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "forcerecusal",
+            "type": "forcerecusal",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "init",
+            "type": "init",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "initelection",
+            "type": "initelection",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "makeoffer",
+            "type": "makeoffer",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "newarbstatus",
+            "type": "newarbstatus",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "readycase",
+            "type": "readycase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "recuse",
+            "type": "recuse",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "regarb",
+            "type": "regarb",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "removeclaim",
+            "type": "removeclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "respond",
+            "type": "respond",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "respondoffer",
+            "type": "respondoffer",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "reviewclaim",
+            "type": "reviewclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setadmin",
+            "type": "setadmin",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setconfig",
+            "type": "setconfig",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setlangcodes",
+            "type": "setlangcodes",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setruling",
+            "type": "setruling",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "settleclaim",
+            "type": "settleclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setversion",
+            "type": "setversion",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "shredcase",
+            "type": "shredcase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "skiptovoting",
+            "type": "skiptovoting",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "startcase",
+            "type": "startcase",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "unregnominee",
+            "type": "unregnominee",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "updateclaim",
+            "type": "updateclaim",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "withdraw",
+            "type": "withdraw",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "accounts",
+            "type": "account",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "arbitrators",
+            "type": "arbitrator",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "casefiles",
+            "type": "casefile",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "claims",
+            "type": "claim",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "config",
+            "type": "config",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "elections",
+            "type": "election",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "joinedcases",
+            "type": "joinder",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "nominees",
+            "type": "nominee",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "offers",
+            "type": "offer",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "kv_tables": {},
+    "ricardian_clauses": [],
+    "variants": [],
+    "action_results": []
+}
