@@ -1,0 +1,32 @@
+{
+    "tlosusd": [
+        {
+            "id": 0,
+            "owner": "admin",
+            "value": 6600,
+            "median": 6500,
+            "timestamp": "2022-01-17T21:55:29.000"
+        },
+        {
+            "id": 1,
+            "owner": "admin",
+            "value": 6600,
+            "median": 6500,
+            "timestamp": "2022-01-17T21:55:29.000"
+        },
+        {
+            "id": 2,
+            "owner": "admin",
+            "value": 6600,
+            "median": 6500,
+            "timestamp": "2022-01-17T21:55:29.000"
+        },
+        {
+            "id": 3,
+            "owner": "admin",
+            "value": 6600,
+            "median": 6500,
+            "timestamp": "2022-01-17T21:55:29.000"
+        }
+    ]
+}

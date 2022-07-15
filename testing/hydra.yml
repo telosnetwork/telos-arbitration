@@ -1,0 +1,22 @@
+contracts:
+  arbitration:
+    abi: contracts_source/arbitration/arbitration.abi
+    fixturesDir: tests/fixtures/arbitration
+    name: arbitration
+    wasm: contracts_source/arbitration/arbitration.wasm
+  telos.decide:
+    abi: contracts_source/telos.decide/telos.decide.abi
+    fixturesDir: tests/fixtures/telos.decide
+    name: telos.decide
+    wasm: contracts_source/telos.decide/telos.decide.wasm
+  delphioracle:
+    abi: contracts_source/delphioracle/delphioracle.abi
+    fixturesDir: tests/fixtures/delphioracle
+    name: delphioracle
+    wasm: contracts_source/delphioracle/delphioracle.wasm
+  eosio.token:
+    abi: contracts_source/eosio.token/eosio.token.abi
+    fixturesDir: tests/fixtures/eosio.token
+    name: eosio.token
+    wasm: contracts_source/eosio.token/eosio.token.wasm
+options: null

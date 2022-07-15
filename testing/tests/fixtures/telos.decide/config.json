@@ -1,0 +1,11 @@
+{
+    "telos.decide": [
+        {
+            "app_name": "Telos Decide",
+            "app_version": "v2.0.4",
+            "total_deposits": "2075.0000 TLOS",
+            "fees": [ { "key": "archival", "value": "1.0000 TLOS" }, { "key": "ballot", "value": "10.0000 TLOS" }, { "key": "committee", "value": "10.0000 TLOS" }, { "key": "treasury", "value": "20.0000 TLOS" }],
+            "times": [ { "key": "balcooldown", "value": 86400 }, { "key": "forfeittime", "value": 864000 }, { "key": "minballength", "value": 60 } ]
+        }
+    ]
+}

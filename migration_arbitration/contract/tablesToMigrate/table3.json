@@ -1,0 +1,9 @@
+{
+    "tableStruct": "claim",
+    "supportTableStruct": "supportclaim",
+    "tableName": "claims",
+    "supportTableName": "supportclaim",
+    "tableType": "claims_table",
+    "supportTableType": "support_claims_table"
+}
+

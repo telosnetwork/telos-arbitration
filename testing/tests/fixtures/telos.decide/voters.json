@@ -1,0 +1,12 @@
+{
+    "arbitration": [
+        {
+            "liquid": "150.0000 VOTE",
+            "staked": "150.0000 VOTE",
+            "staked_time": "2020-04-04T04:47:37",
+            "delegated": "0.0000 VOTE",
+            "delegated_to": "",
+            "delegation_time": "2020-04-04T04:47:37"
+        }
+    ]
+}
