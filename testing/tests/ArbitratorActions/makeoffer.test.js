@@ -100,6 +100,54 @@ describe("Make Offer Telos Arbitration Smart Contract Tests", () => {
         expect(casefiles.find(cf => cf.case_id === "0").number_offers).toEqual(2);  
     });
 
+    it("make offer for a case id != 0 and correctly updates case id", async () => {
+        await arbitration.loadFixtures("casefiles", {
+            arbitration: [{
+                case_id: '5',
+                case_status: 1,
+                claimant: 'user1',
+                respondant: 'user2',
+                arbitrators: [],
+                approvals: [],
+                number_claims: 1,
+                number_offers: 1,
+                required_langs: [ 0, 1, 2 ],
+                case_ruling: '',
+                recusal: "",
+                update_ts: '2000-01-01T00:00:00.000',
+                fee_paid_tlos: "0.0000 TLOS",
+                arbitrator_cost_tlos: "0.0000 TLOS",
+                sending_offers_until_ts: "2000-01-10T00:00:00.000"
+            }]
+            
+        })
+        
+        await arbitration.contract.makeoffer({
+            case_id: "5",
+            offer_id: -1,
+            arbitrator: "user3",
+            hourly_rate: "10.0000 USD",
+            estimated_hours: 10,
+        },
+            [{
+                actor: user3.accountName,
+                permission: "active"
+            }]);
+        
+        const offers = arbitration.getTableRowsScoped("offers")[arbitration.accountName];
+        expect(offers.find(offer => offer.offer_id === "0")).toEqual({
+            offer_id: "0",
+            case_id: "5",
+            status: 1,
+            estimated_hours: 10,
+            arbitrator: "user3",
+            hourly_rate: "10.0000 USD",
+        });
+
+        const casefiles = arbitration.getTableRowsScoped("casefiles")[arbitration.accountName];
+        expect(casefiles.find(cf => cf.case_id === "0").number_offers).toEqual(2);  
+    });
+
     it("update offer", async () => {
          await arbitration.loadFixtures("offers", {
             arbitration: [{

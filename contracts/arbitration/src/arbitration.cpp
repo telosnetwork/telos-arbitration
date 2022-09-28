@@ -1104,6 +1104,7 @@ void arbitration::makeoffer(uint64_t case_id, int64_t offer_id, name arbitrator,
 		//Create an offer
 		offers.emplace(arbitrator, [&](auto& col) {
 			col.offer_id = offers.available_primary_key();
+			col.case_id = case_id;
 			col.status = static_cast<uint8_t>(offer_status::PENDING);
 			col.estimated_hours = estimated_hours;
 			col.hourly_rate = hourly_rate;
