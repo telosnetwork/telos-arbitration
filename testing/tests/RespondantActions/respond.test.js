@@ -62,8 +62,10 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
                     status: 1,
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-10T00:00:00.000',
                     response_info_needed: true,
+                    response_info_required: 'Update response info',
                     claim_category: 3,
                 }
             ]
@@ -94,7 +96,9 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
             status: 2,
             claim_category: 3,
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: false,
+            response_info_required: 'Update response info',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: "2000-01-10T00:00:00.000"
         })
@@ -124,8 +128,10 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
                     status: 1,
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                     claim_category: 3,
                 }
             ]
@@ -175,8 +181,10 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
                     status: 1,
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                     claim_category: 3,
                 }
             ]
@@ -239,8 +247,10 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
                     status: 1,
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,  
+                    response_info_required: '',
                     claim_category: 3,
                 }
             ]
@@ -283,8 +293,10 @@ describe("Respond Telos Arbitration Smart Contract Tests", () => {
                     status: 3,
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                     claim_category: 3,
                 }
             ]

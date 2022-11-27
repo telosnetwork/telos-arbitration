@@ -63,8 +63,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -93,7 +95,9 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
             status: 4,
             claim_category: 1, 
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: false,
+            response_info_required: '',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: "2000-01-01T00:00:00.000"
         })
@@ -132,8 +136,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
          })
@@ -159,7 +165,9 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
             status: 3,
             claim_category: 1, 
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: false,
+            response_info_required: '',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: "2000-01-01T00:00:00.000"
         })
@@ -177,8 +185,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '1999-12-31T00:00:00.000',
                     response_info_needed: true,
+                    response_info_required: 'Update response info',
                 }
             ]
         })
@@ -204,7 +214,9 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
             status: 3,
             claim_category: 1, 
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: true,
+            response_info_required: 'Update response info',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: '1999-12-31T00:00:00.000',
         })
@@ -222,8 +234,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -249,7 +263,9 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
             status: 3,
             claim_category: 1, 
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: false,
+            response_info_required: '',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: "2000-01-01T00:00:00.000"
         })
@@ -316,8 +332,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -368,8 +386,10 @@ describe("Settle claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-15T00:00:00.000',
                     response_info_needed: true,
+                    response_info_required: 'Update response info',
                 }
             ]
         })

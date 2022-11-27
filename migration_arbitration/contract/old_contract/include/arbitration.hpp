@@ -1,7 +1,7 @@
 /**
  * Arbitration Contract Interface
  *
- * @author Craig Branscom, Peter Bue, Ed Silva, Douglas Horn
+ * @author Roger Taulé, Craig Branscom, Peter Bue, Ed Silva, Douglas Horn
  * @copyright defined in telos/LICENSE.txt
  */
 
@@ -12,10 +12,14 @@
 #include <eosio/permission.hpp>
 #include <eosio/singleton.hpp>
 #include "telosdecide-interface.hpp"
+#include "delphioracle-interface.hpp"
+#include "eosiosystem-interface.hpp"
 
 using namespace std;
 using namespace eosio;
 using namespace telosdecide;
+using namespace delphioracle;
+using namespace eosiosystem;
 
 CONTRACT arbitration : public eosio::contract
 {
@@ -25,6 +29,7 @@ CONTRACT arbitration : public eosio::contract
 
 	static constexpr symbol TLOS_SYM = symbol("TLOS", 4);
     static constexpr symbol VOTE_SYM = symbol("VOTE", 4);
+	static constexpr symbol USD_SYM = symbol("USD", 4);
 
 #pragma region Enums
 
@@ -34,13 +39,14 @@ CONTRACT arbitration : public eosio::contract
 	{
 		CASE_SETUP          = 0,		
 		AWAITING_ARBS		= 1,
-		CASE_INVESTIGATION  = 2,
-		HEARING             = 3,
-		DELIBERATION        = 4,
-		DECISION			= 5,
-		ENFORCEMENT			= 6,
-		RESOLVED			= 7,
-		DISMISSED			= 8,// 8 NOTE: Dismissed cases advance and stop here
+		ARBS_ASSIGNED       = 2,
+		CASE_INVESTIGATION  = 3,
+		DECISION			= 4,
+		ENFORCEMENT			= 5,
+		RESOLVED			= 6,
+		DISMISSED			= 7,
+		CANCELLED           = 8,
+		MISTRIAL            = 9,
 	};
 
 	friend constexpr bool operator == ( const uint8_t& a, const case_status& b) {
@@ -63,6 +69,22 @@ CONTRACT arbitration : public eosio::contract
 		return a >= static_cast<uint8_t>(b);
 	}
 
+	enum class offer_status : uint8_t
+	{
+		PENDING            	= 1,
+		ACCEPTED        	= 2,
+		REJECTED            = 3,
+		DISMISSED           = 4,
+	};
+
+	friend constexpr bool operator == ( const uint8_t& a, const offer_status& b) {
+		return a == static_cast<uint8_t>(b);
+	}
+
+	friend constexpr bool operator != ( const uint8_t& a, const offer_status& b) {
+		return a == static_cast<uint8_t>(b);
+	}
+
 	enum class claim_status : uint8_t
 	{
 		FILED            	= 1,
@@ -79,31 +101,38 @@ CONTRACT arbitration : public eosio::contract
 		return a == static_cast<uint8_t>(b);
 	}
 
-	enum class claim_decision : uint8_t
+	enum class claim_category : uint8_t
 	{
-		UNDECIDED			= 1,
-		LOST_KEY_RECOVERY	= 2,
-		TRX_REVERSAL		= 3,
-		EMERGENCY_INTER		= 4,
-		CONTESTED_OWNER		= 5,
-		UNEXECUTED_RELIEF	= 6,
-		CONTRACT_BREACH		= 7,
-		MISUSED_CR_IP		= 8,
-		A_TORT				= 9,
-		BP_PENALTY_REVERSAL	= 10,
-		WRONGFUL_ARB_ACT 	= 11,
-		ACT_EXEC_RELIEF		= 12,
-		WP_PROJ_FAILURE		= 13,
-		TBNOA_BREACH		= 14,
-		MISC				= 15
+		LOST_KEY_RECOVERY	= 1,
+		TRX_REVERSAL		= 2,
+		EMERGENCY_INTER		= 3,
+		CONTESTED_OWNER		= 4,
+		UNEXECUTED_RELIEF	= 5,
+		CONTRACT_BREACH		= 6,
+		MISUSED_CR_IP		= 7,
+		A_TORT				= 8,
+		BP_PENALTY_REVERSAL	= 9,
+		WRONGFUL_ARB_ACT 	= 10,
+		ACT_EXEC_RELIEF		= 11,
+		WP_PROJ_FAILURE		= 12,
+		TBNOA_BREACH		= 13,
+		MISC				= 14
 	};
+
+	friend constexpr bool operator >= ( const uint8_t& a, const claim_category& b) {
+		return a >= static_cast<uint8_t>(b);
+	}
+
+	friend constexpr bool operator <= ( const uint8_t& a, const claim_category& b) {
+		return a <= static_cast<uint8_t>(b);
+	}
 
 	enum class arb_status : uint8_t
 	{
-		AVAILABLE           = 0,    
-		UNAVAILABLE         = 1, 
-		REMOVED             = 2,	 
-		SEAT_EXPIRED        = 3, 
+		AVAILABLE           = 1,    
+		UNAVAILABLE         = 2, 
+		REMOVED             = 3,	 
+		SEAT_EXPIRED        = 4, 
 	};
 
 	friend constexpr bool operator == ( const uint8_t& a, const arb_status& b) {
@@ -153,109 +182,203 @@ CONTRACT arbitration : public eosio::contract
 	//auth: self
 	ACTION init(name initial_admin);
 
+	//set new admin
+	//pre: new_admin account exists 
+	//auth: admin
 	ACTION setadmin(name new_admin);
 
+	//set contract version
+    //auth: admin
 	ACTION setversion(string new_version);
 
+	//set configuration parameters
+    //auth: admin
 	ACTION setconfig(uint16_t max_elected_arbs, uint32_t election_duration, uint32_t runoff_duration, 
-		uint32_t election_add_candidates_duration, uint32_t arbitrator_term_length, vector<int64_t> fees/*, 
-		uint8_t max_claims_per_case*/);
-
-	ACTION setclaimclss(uint8_t claim_class_id, asset initial_deposit, asset fee, uint16_t respondant_days,
-	 	uint8_t number_arbitrators);
-
-	ACTION rmvclaimclss(uint8_t claim_class_id);
+		uint32_t election_add_candidates_duration, uint32_t arbitrator_term_length, uint8_t max_claims_per_case, 
+		asset fee_usd, uint32_t claimant_accepting_offers_duration);
 
 #pragma endregion Config_Actions
 
 #pragma region Arb_Elections
 
+	//Create a new election
+	//auth: admin
 	ACTION initelection(string content);
 
+	//Register a new nominee
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION regarb(name nominee, string credentials_link);
     //NOTE: actually regnominee, currently regarb for nonsense governance reasons
 
+	//Unregister a nominee
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION unregnominee(name nominee);
 
+	//Set a nominee as a possible arbitrator candidate in the election
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION candaddlead(name nominee);
 
+	//Remove a nomine as a possible arbitrator candidate in the election
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION candrmvlead(name nominee);
 
+	//Starts the election voting
+	//auth: admin
 	ACTION beginvoting(name ballot_name, bool runoff);
 	
+	//Ends the election and set the new arbitrators
+	//auth: admin
 	ACTION endelection();
 
 #pragma endregion Arb_Elections
 
 #pragma region Claimant_Actions
 
+	//Allows the owner to withdraw their funds
+	//pre: balance > 0
+	//auth: owner
 	ACTION withdraw(name owner);
 
+	//Files a new case
+	//auth: claimant
 	//NOTE: filing a case doesn't require a respondent
 	ACTION filecase(name claimant, string claim_link, vector<uint16_t> lang_codes,
-	        std::optional<name> respondant);
+	        std::optional<name> respondant, uint8_t claim_category);
 
-	ACTION addclaim(uint64_t case_id, string claim_link, name claimant);
+	//Adds a claim for an existing case
+	//pre: case must be in setup status
+	//auth: claimant
+	ACTION addclaim(uint64_t case_id, string claim_link, name claimant, uint8_t claim_category);
 
-	//NOTE: claims can only be removed by a claimant during case setup
+	//Updates a claim for an existing case
+	//pre: case must be in investigation or setup status
+	//auth: claimant
+	ACTION updateclaim(uint64_t case_id, uint64_t claim_id, name claimant, string claim_link);
+
+	//Remove a claim for an existing case
+	//pre: case must be in setup status
+	//auth: claimant
 	ACTION removeclaim(uint64_t case_id, uint64_t claim_id, name claimant);
 
-	//NOTE: member-level case removal, called during CASE_SETUP
+	//Remove an existing case
+	//pre: case must be in setup status
+	//auth: claimant
 	ACTION shredcase(uint64_t case_id, name claimant);
 
-	//NOTE: enforce claimant has at least 1 claim before readying
+	//Set a case as ready to proceed
+	//pre: case must be in setup status
+	//post: case moves to awaiting arbs stage
+	//auth: claimant
 	ACTION readycase(uint64_t case_id, name claimant);
+
+	//Respond an offer of an arbitator to take the case
+	//pre: case must be in awaiting arbs status
+	//post: if the offer is accepted, case moves to arbs assigned stage
+	//auth: claimant
+	ACTION respondoffer(uint64_t case_id, uint64_t offer_id, bool accept);
+
+	//Cancel a case before accepting any of the arbitators offer
+	//pre: case must be in awaiting arbs status
+	//auth: claimant
+	ACTION cancelcase(uint64_t case_id);
 
 #pragma endregion Claimant_Actions
 
-#pragma region Case_Actions
+#pragma region Respondant_Actions
 
+	//Allows the respondant to respond to a claim
+	//pre: case must be in investigation status
+	//auth: respondant
 	ACTION respond(uint64_t case_id, uint64_t claim_id, name respondant, string response_link);
 
-	ACTION assigntocase(uint64_t case_id, name arb_to_assign);
+#pragma endregion Respondant_Actions
 
-	ACTION addarbs(uint64_t case_id, name assigned_arb, uint8_t num_arbs_to_assign);
+#pragma region Case_Actions
 
-	ACTION dismissclaim(uint64_t case_id, name assigned_arb, uint64_t claim_id, string memo);
+	//Starts the case investigation period
+	//pre: case must be in arbs_assigned status
+	//auth: assigned arbitrator
+	ACTION startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant);
 
-	ACTION acceptclaim(uint64_t case_id, name assigned_arb, uint64_t claim_id, string decision_link,
-	        uint8_t decision_class);
+	//Ask the respondant and the claimant to provide more information if needed
+	//pre: case must be in investigation status
+	//auth: assigned arbitrator
+	ACTION reviewclaim(uint64_t case_id, uint64_t claim_id, name assigned_arb, bool claim_info_needed, 
+	bool response_info_needed, uint8_t number_days_claimant, uint8_t number_days_respondant);
 
-	ACTION execclaim(uint64_t new_claim_id, uint64_t case_id, name assigned_arb, string claim_hash,
-        string decision_link, uint8_t decision_class);
+	//Accepts or denies a claim of a particular case
+	//pre: case must be in investigation status
+	//auth: assigned arbitrator
+	ACTION settleclaim(uint64_t case_id, name assigned_arb, uint64_t claim_id, bool accept, string decision_link);
 
-	ACTION advancecase(uint64_t case_id, name assigned_arb);
-
-	ACTION dismisscase(uint64_t case_id, name assigned_arb, string ruling_link);
-
+	//After settling all the claims, set a ruling for the whole case
+	//pre: case must be in investigation status and all claims settled
+	//post: moves the case to decision stage
+	//auth: assigned arbitrator
 	ACTION setruling(uint64_t case_id, name assigned_arb, string case_ruling);
-
-	ACTION recuse(uint64_t case_id, string rationale, name assigned_arb);
 
 #pragma endregion Case_Actions
 
+#pragma region BP_Actions
+
+	//Validates that the case and the decision taken by the arbitrator are valid
+	//pre: case must be in decision stage
+	//post: if not valid, case is considered mistrial. Otherwise, move the case to enforcement stage
+	//auth: admin
+	ACTION validatecase(uint64_t case_id, bool proceed);
+
+	//Closes a case after the ruling has been enforced
+	//pre: case must be in enforcement status
+	//post: moves the case to resolved status
+	//auth: admin
+	ACTION closecase(uint64_t case_id);
+
+	//Forces the recusal of an arbitrator from a case
+	//pre: case must not be enforced yet
+	//post: Case is considered void and mistrial status is set
+	//auth: admin
+	ACTION forcerecusal(uint64_t case_id, string rationale, name arbitrator);
+
+	//Dismiss an arbitrator from all his cases
+	//auth: admin
+	ACTION dismissarb(name arbitrator, bool remove_from_cases);
+
+#pragma endregion BP_Actions
+
 #pragma region Arb_Actions
 
+	//Makes an offer with an hourly rate and the number of estimated ours for a case
+	//pre: case must in awaiting arbs status
+	//auth: arbitrator
+	ACTION makeoffer(uint64_t case_id, int64_t offer_id, name arbitrator, asset hourly_rate, uint8_t estimated_hours);
+
+	//Dismiss an offer made for a case
+	//pre: case must in awaiting arbs status and offer not accepted nor declined yet
+	//auth: arbitrator
+	ACTION dismissoffer(uint64_t case_id, uint64_t offer_id);
+
+	//Set the different languages the arbitrator will handle cases
+	//auth: arbitrator
 	ACTION setlangcodes(name arbitrator, vector<uint16_t> lang_codes);
 
+	//Set a new arbitrator status
+	//auth: arbitrator
 	ACTION newarbstatus(name arbitrator, uint8_t new_status);
 
-	ACTION deletecase(uint64_t case_id);
-	
+	//Recuse from a case
+	//post: Case is considered void and mistrial status is set
+	//auth: arbitrator
+	ACTION recuse(uint64_t case_id, string rationale, name assigned_arb);
+
 #pragma endregion Arb_Actions
-
-#pragma region BP_Multisig_Actions
-
-	ACTION dismissarb(name arb, bool remove_from_cases);
-
-	//TODO: affidavit action, forced recusal of arbitrator from a specified case.
-
-#pragma endregion BP_Multisig_Actions
 
 #pragma region Test_Actions
 	
 #pragma endregion Test_Actions
-
 
 #pragma region System Structs
 
@@ -326,14 +449,15 @@ CONTRACT arbitration : public eosio::contract
 		uint8_t arb_status;
 		vector<uint64_t> open_case_ids;
 		vector<uint64_t> closed_case_ids;
+		vector<uint64_t> recused_case_ids;
 		string credentials_link; //NOTE: ipfs_url of arbitrator credentials
 		time_point_sec elected_time;
 		time_point_sec term_expiration;
 		vector<uint16_t> languages; //NOTE: language codes
 
 		uint64_t primary_key() const { return arb.value; }
-		EOSLIB_SERIALIZE(arbitrator, (arb)(arb_status)(open_case_ids)(closed_case_ids)(credentials_link)
-		    (elected_time)(term_expiration)(languages))
+		EOSLIB_SERIALIZE(arbitrator, (arb)(arb_status)(open_case_ids)(closed_case_ids)
+			(recused_case_ids)(credentials_link)(elected_time)(term_expiration)(languages))
 	};
 	typedef multi_index<name("arbitrators"), arbitrator> arbitrators_table;
 
@@ -345,11 +469,17 @@ CONTRACT arbitration : public eosio::contract
 		string claim_summary; //NOTE: ipfs link to claim document from claimant
 		string decision_link; //NOTE: ipfs link to decision document from arbitrator
 		string response_link; //NOTE: ipfs link to response document from respondant (if any)
-		uint8_t status;
-		uint8_t decision_class;
+		time_point_sec claimant_limit_time;
+		bool claim_info_needed = false;
+		time_point_sec respondant_limit_time;
+		bool response_info_needed = false;
+		uint8_t status = static_cast<uint8_t>(claim_status::FILED);
+		uint8_t claim_category;
 
 		uint64_t primary_key() const { return claim_id; }
-		EOSLIB_SERIALIZE(claim, (claim_id)(claim_summary)(decision_link)(response_link)(status)(decision_class))
+		EOSLIB_SERIALIZE(claim, (claim_id)(claim_summary)(decision_link)(response_link)
+		(claimant_limit_time)(claim_info_needed)(respondant_limit_time)(response_info_needed)
+		(status)(claim_category))
 	};
 	typedef multi_index<name("claims"), claim> claims_table;
 
@@ -361,9 +491,6 @@ CONTRACT arbitration : public eosio::contract
    */
 	TABLE casefile
 	{
-		//NOTE: alternative table design. No secondary indices. Scope by claimant. Index by respondant.
-		//pros: easy to track by claimant, no longer need secondary indexes.
-		//cons: limited discoverability, must avoid secondary indexes.
 		uint64_t case_id;
 		uint8_t case_status;
 		name claimant;
@@ -371,9 +498,13 @@ CONTRACT arbitration : public eosio::contract
 		vector<name> arbitrators;
 		vector<name> approvals;
 		uint8_t number_claims;
+		uint8_t number_offers;
 		vector<uint16_t> required_langs;
 		string case_ruling;
+		asset fee_paid_tlos = asset(0, TLOS_SYM);
+		asset arbitrator_cost_tlos = asset(0, TLOS_SYM);
 		time_point_sec update_ts; 
+		time_point_sec sending_offers_until_ts;
 
 		uint64_t primary_key() const { return case_id; }
 
@@ -386,7 +517,8 @@ CONTRACT arbitration : public eosio::contract
 		}
 		
 		EOSLIB_SERIALIZE(casefile, (case_id)(case_status)(claimant)(respondant)(arbitrators)(approvals)
-		(number_claims)(required_langs)(case_ruling)(update_ts))
+		(number_claims)(number_offers)(required_langs)(case_ruling)(fee_paid_tlos)
+		(arbitrator_cost_tlos)(update_ts)(sending_offers_until_ts))
 	};
 	typedef multi_index<name("casefiles"), casefile> casefiles_table;
 
@@ -404,31 +536,20 @@ CONTRACT arbitration : public eosio::contract
 		uint32_t election_voting_ts = 2505600; //29 days
 		uint32_t runoff_election_voting_ts = 604800;
 		uint32_t election_add_candidates_ts = 604800; //7 days
-		vector<int64_t> fee_structure = vector<int64_t> {2000000}; //NOTE: always in TLOS so only store asset.amount value
 		uint32_t arb_term_length = 31536000; //365 days
+		uint32_t claimant_accepting_offers_ts = 604800; //7 days
 		uint64_t current_election_id;
-		//uint8_t max_claims_per_case = 21;
+		uint8_t max_claims_per_case = 21;
+		asset fee_usd = asset(100000, USD_SYM);
 		asset available_funds = asset(0, TLOS_SYM);
+		asset reserved_funds = asset(0, TLOS_SYM);
 
 		EOSLIB_SERIALIZE(config, (admin)(contract_version)(max_elected_arbs)(election_voting_ts)
-			(runoff_election_voting_ts)(election_add_candidates_ts)(fee_structure)(arb_term_length)
-			(current_election_id)/*(max_claims_per_case)*/(available_funds))
+			(runoff_election_voting_ts)(election_add_candidates_ts)(arb_term_length)
+			(claimant_accepting_offers_ts)(current_election_id)
+			(max_claims_per_case)(fee_usd)(available_funds)(reserved_funds))
 	};
 	typedef singleton<name("config"), config> config_singleton;
-
-
-	TABLE categories
-	{
-		uint8_t claim_class_id;
-		asset initial_deposit;
-		asset fee;
-		uint16_t respondant_days;
-		uint8_t number_arbitrators;
-
-		uint64_t primary_key() const { return (uint64_t) claim_class_id; }
-		EOSLIB_SERIALIZE(categories, (claim_class_id)(initial_deposit)(fee)(respondant_days)(number_arbitrators))
-	};
-	typedef multi_index<name("claimclass"), categories> claim_class_table;
 
 	/**
    * Holds instances of joinder cases.
@@ -455,6 +576,33 @@ CONTRACT arbitration : public eosio::contract
 		EOSLIB_SERIALIZE(account, (balance))
 	};
 	typedef multi_index<name("accounts"), account> accounts_table;
+
+	//NOTE: scope: self
+	TABLE offer {
+		uint64_t offer_id;
+		uint64_t case_id;
+		uint8_t status;
+		uint8_t estimated_hours;
+		name arbitrator;
+		asset hourly_rate;
+
+		uint64_t primary_key() const { return offer_id; }
+
+		uint64_t by_arbitrator() const {return arbitrator.value; }
+
+		uint64_t by_case() const {return case_id; }
+
+		uint128_t by_case_and_arbitrator() const { return ((uint128_t)case_id << 64)|((uint128_t)arbitrator.value); }
+
+		EOSLIB_SERIALIZE(offer, (offer_id)(case_id)(status)(estimated_hours)(arbitrator)(hourly_rate))
+	};
+
+	typedef multi_index<name("offers"), offer,
+		indexed_by<name("byarb"), const_mem_fun<offer, uint64_t, &offer::by_arbitrator>>,
+		indexed_by<name("bycase"), const_mem_fun<offer, uint64_t, &offer::by_case>>,
+		indexed_by<name("bycasearb"), const_mem_fun<offer, uint128_t, &offer::by_case_and_arbitrator>>
+	> offers_table;
+
 
 
 	//NOTE: scope: self
@@ -498,6 +646,8 @@ CONTRACT arbitration : public eosio::contract
 
 	void add_arbitrator(arbitrators_table & arbitrators, name arb_name, std::string credential_link);
 
+	bool all_claims_resolved(uint64_t case_id);
+
 	vector<permission_level_weight> get_arb_permissions();
 
 	void set_permissions(vector<permission_level_weight> &perms);
@@ -512,6 +662,10 @@ CONTRACT arbitration : public eosio::contract
   	checksum256 get_rngseed(uint64_t seed);
 
 	string get_rand_ballot_name();
+
+	uint64_t tlosusdprice();
+
+	void notify_bp_accounts();
 
 #pragma endregion Helpers
 
@@ -533,4 +687,3 @@ CONTRACT arbitration : public eosio::contract
 #pragma endregion Test_Actions
 
 };
-

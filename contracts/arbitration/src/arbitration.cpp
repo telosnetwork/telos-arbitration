@@ -851,7 +851,7 @@ void arbitration::respond(uint64_t case_id, uint64_t claim_id, name respondant, 
 
 #pragma region Case_Actions
 
-void arbitration::startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant) {
+void arbitration::startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant, string response_info_required) {
 
 	//authenticate
 	require_auth(assigned_arb);
@@ -880,6 +880,7 @@ void arbitration::startcase(uint64_t case_id, name assigned_arb, uint8_t number_
 		for(auto claim_it = claims.begin(); claim_it != claims.end(); ++claim_it) {
 			claims.modify(claim_it, get_self(), [&](auto& col){
 				col.response_info_needed = true;
+				col.response_info_required = response_info_required;
 				col.respondant_limit_time = time_point_sec(current_time_point().sec_since_epoch() + number_days_respondant*86400);
 			});	
 		}
@@ -899,7 +900,8 @@ void arbitration::startcase(uint64_t case_id, name assigned_arb, uint8_t number_
 }
 
 void arbitration::reviewclaim(uint64_t case_id, uint64_t claim_id, name assigned_arb, 
-	bool claim_info_needed, bool response_info_needed, uint8_t number_days_claimant, uint8_t number_days_respondant){
+	bool claim_info_needed, string claim_info_required, bool response_info_needed, 
+	string response_info_required, uint8_t number_days_claimant, uint8_t number_days_respondant){
 	
 	//authenticate
 	require_auth(assigned_arb);
@@ -930,11 +932,13 @@ void arbitration::reviewclaim(uint64_t case_id, uint64_t claim_id, name assigned
 	claims.modify(claim_it, get_self(), [&](auto& col) {
 		if(claim_info_needed) {
 			col.claim_info_needed = true;
+			col.claim_info_required = claim_info_required;
 			col.claimant_limit_time = time_point_sec(current_time_point().sec_since_epoch() + number_days_claimant*86400);
 		}
 
 		if(response_info_needed) {
 			col.response_info_needed = true;
+			col.response_info_required = response_info_required;
 			col.respondant_limit_time = time_point_sec(current_time_point().sec_since_epoch() + number_days_respondant*86400);
 		}
 	});
@@ -1081,6 +1085,8 @@ void arbitration::makeoffer(uint64_t case_id, int64_t offer_id, name arbitrator,
 	//open casefile tables and checks that the case exists
 	casefiles_table casefiles(get_self(), get_self().value);
 	const auto& cf = casefiles.get(case_id, "Case not found");
+
+	check(cf.claimant != arbitrator && cf.respondant != arbitrator, "Arbitrator can not be neither claimant nor respondant");
 
 	//Offers can only be made if case is in awaiting arbs status and the period for sending offers is valid
 	check(cf.case_status == case_status::AWAITING_ARBS, "Case needs to be in AWAITING ARBS status");

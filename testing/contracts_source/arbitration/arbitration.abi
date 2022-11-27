@@ -226,12 +226,20 @@
                     "type": "bool"
                 },
                 {
+                    "name": "claim_info_required",
+                    "type": "string"
+                },
+                {
                     "name": "respondant_limit_time",
                     "type": "time_point_sec"
                 },
                 {
                     "name": "response_info_needed",
                     "type": "bool"
+                },
+                {
+                    "name": "response_info_required",
+                    "type": "string"
                 },
                 {
                     "name": "status",
@@ -717,8 +725,16 @@
                     "type": "bool"
                 },
                 {
+                    "name": "claim_info_required",
+                    "type": "string"
+                },
+                {
                     "name": "response_info_needed",
                     "type": "bool"
+                },
+                {
+                    "name": "response_info_required",
+                    "type": "string"
                 },
                 {
                     "name": "number_days_claimant",
@@ -880,6 +896,10 @@
                 {
                     "name": "number_days_respondant",
                     "type": "uint8"
+                },
+                {
+                    "name": "response_info_required",
+                    "type": "string"
                 }
             ]
         },

@@ -1,7 +1,7 @@
 /**
  * Arbitration Contract Interface
  *
- * @author Craig Branscom, Peter Bue, Ed Silva, Douglas Horn
+ * @author Roger Taulé, Craig Branscom, Peter Bue, Ed Silva, Douglas Horn
  * @copyright defined in telos/LICENSE.txt
  */
 
@@ -13,11 +13,13 @@
 #include <eosio/singleton.hpp>
 #include "telosdecide-interface.hpp"
 #include "delphioracle-interface.hpp"
+#include "eosiosystem-interface.hpp"
 
 using namespace std;
 using namespace eosio;
 using namespace telosdecide;
 using namespace delphioracle;
+using namespace eosiosystem;
 
 CONTRACT arbitration : public eosio::contract
 {
@@ -180,10 +182,17 @@ CONTRACT arbitration : public eosio::contract
 	//auth: self
 	ACTION init(name initial_admin);
 
+	//set new admin
+	//pre: new_admin account exists 
+	//auth: admin
 	ACTION setadmin(name new_admin);
 
+	//set contract version
+    //auth: admin
 	ACTION setversion(string new_version);
 
+	//set configuration parameters
+    //auth: admin
 	ACTION setconfig(uint16_t max_elected_arbs, uint32_t election_duration, uint32_t runoff_duration, 
 		uint32_t election_add_candidates_duration, uint32_t arbitrator_term_length, uint8_t max_claims_per_case, 
 		asset fee_usd, uint32_t claimant_accepting_offers_duration);
@@ -192,95 +201,178 @@ CONTRACT arbitration : public eosio::contract
 
 #pragma region Arb_Elections
 
+	//Create a new election
+	//auth: admin
 	ACTION initelection(string content);
 
+	//Register a new nominee
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION regarb(name nominee, string credentials_link);
     //NOTE: actually regnominee, currently regarb for nonsense governance reasons
 
+	//Unregister a nominee
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION unregnominee(name nominee);
 
+	//Set a nominee as a possible arbitrator candidate in the election
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION candaddlead(name nominee);
 
+	//Remove a nomine as a possible arbitrator candidate in the election
+	//pre: Election must be in accepting candidates status
+	//auth: nominee
 	ACTION candrmvlead(name nominee);
 
+	//Starts the election voting
+	//auth: admin
 	ACTION beginvoting(name ballot_name, bool runoff);
 	
+	//Ends the election and set the new arbitrators
+	//auth: admin
 	ACTION endelection();
 
 #pragma endregion Arb_Elections
 
 #pragma region Claimant_Actions
 
+	//Allows the owner to withdraw their funds
+	//pre: balance > 0
+	//auth: owner
 	ACTION withdraw(name owner);
 
+	//Files a new case
+	//auth: claimant
 	//NOTE: filing a case doesn't require a respondent
 	ACTION filecase(name claimant, string claim_link, vector<uint16_t> lang_codes,
 	        std::optional<name> respondant, uint8_t claim_category);
 
+	//Adds a claim for an existing case
+	//pre: case must be in setup status
+	//auth: claimant
 	ACTION addclaim(uint64_t case_id, string claim_link, name claimant, uint8_t claim_category);
 
-	//NOTE: claims can only be removed by a claimant during case setup
+	//Updates a claim for an existing case
+	//pre: case must be in investigation or setup status
+	//auth: claimant
+	ACTION updateclaim(uint64_t case_id, uint64_t claim_id, name claimant, string claim_link);
+
+	//Remove a claim for an existing case
+	//pre: case must be in setup status
+	//auth: claimant
 	ACTION removeclaim(uint64_t case_id, uint64_t claim_id, name claimant);
 
-	//NOTE: member-level case removal, called during CASE_SETUP
+	//Remove an existing case
+	//pre: case must be in setup status
+	//auth: claimant
 	ACTION shredcase(uint64_t case_id, name claimant);
 
-	//NOTE: enforce claimant has at least 1 claim before readying
+	//Set a case as ready to proceed
+	//pre: case must be in setup status
+	//post: case moves to awaiting arbs stage
+	//auth: claimant
 	ACTION readycase(uint64_t case_id, name claimant);
 
-	ACTION updateclaim(uint64_t case_id, uint64_t claim_id, name claimant, string claim_link);
+	//Respond an offer of an arbitator to take the case
+	//pre: case must be in awaiting arbs status
+	//post: if the offer is accepted, case moves to arbs assigned stage
+	//auth: claimant
+	ACTION respondoffer(uint64_t case_id, uint64_t offer_id, bool accept);
+
+	//Cancel a case before accepting any of the arbitators offer
+	//pre: case must be in awaiting arbs status
+	//auth: claimant
+	ACTION cancelcase(uint64_t case_id);
 
 #pragma endregion Claimant_Actions
 
-#pragma region Selecting_Arbitrator_Actions
-
-	ACTION makeoffer(uint64_t case_id, int64_t offer_id, name arbitrator, asset hourly_rate, uint8_t estimated_hours);
-
-	ACTION dismissoffer(uint64_t case_id, uint64_t offer_id);
-
-	ACTION respondoffer(uint64_t case_id, uint64_t offer_id, bool accept);
-
-	ACTION cancelcase(uint64_t case_id);
-
-#pragma endregion Selecting_Arbitrator_Actions
-
 #pragma region Respondant_Actions
 
+	//Allows the respondant to respond to a claim
+	//pre: case must be in investigation status
+	//auth: respondant
 	ACTION respond(uint64_t case_id, uint64_t claim_id, name respondant, string response_link);
 
 #pragma endregion Respondant_Actions
 
 #pragma region Case_Actions
 
-	ACTION startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant);
+	//Starts the case investigation period
+	//pre: case must be in arbs_assigned status
+	//auth: assigned arbitrator
+	ACTION startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant, string response_info_required);
 
+	//Ask the respondant and the claimant to provide more information if needed
+	//pre: case must be in investigation status
+	//auth: assigned arbitrator
 	ACTION reviewclaim(uint64_t case_id, uint64_t claim_id, name assigned_arb, bool claim_info_needed, 
-	bool response_info_needed, uint8_t number_days_claimant, uint8_t number_days_respondant);
+	string claim_info_required, bool response_info_needed, string response_info_required,
+	uint8_t number_days_claimant, uint8_t number_days_respondant);
 
+	//Accepts or denies a claim of a particular case
+	//pre: case must be in investigation status
+	//auth: assigned arbitrator
 	ACTION settleclaim(uint64_t case_id, name assigned_arb, uint64_t claim_id, bool accept, string decision_link);
 
+	//After settling all the claims, set a ruling for the whole case
+	//pre: case must be in investigation status and all claims settled
+	//post: moves the case to decision stage
+	//auth: assigned arbitrator
 	ACTION setruling(uint64_t case_id, name assigned_arb, string case_ruling);
 
 #pragma endregion Case_Actions
 
 #pragma region BP_Actions
 
+	//Validates that the case and the decision taken by the arbitrator are valid
+	//pre: case must be in decision stage
+	//post: if not valid, case is considered mistrial. Otherwise, move the case to enforcement stage
+	//auth: admin
 	ACTION validatecase(uint64_t case_id, bool proceed);
 
+	//Closes a case after the ruling has been enforced
+	//pre: case must be in enforcement status
+	//post: moves the case to resolved status
+	//auth: admin
 	ACTION closecase(uint64_t case_id);
 
+	//Forces the recusal of an arbitrator from a case
+	//pre: case must not be enforced yet
+	//post: Case is considered void and mistrial status is set
+	//auth: admin
 	ACTION forcerecusal(uint64_t case_id, string rationale, name arbitrator);
 
+	//Dismiss an arbitrator from all his cases
+	//auth: admin
 	ACTION dismissarb(name arbitrator, bool remove_from_cases);
 
 #pragma endregion BP_Actions
 
 #pragma region Arb_Actions
 
+	//Makes an offer with an hourly rate and the number of estimated ours for a case
+	//pre: case must in awaiting arbs status
+	//auth: arbitrator
+	ACTION makeoffer(uint64_t case_id, int64_t offer_id, name arbitrator, asset hourly_rate, uint8_t estimated_hours);
+
+	//Dismiss an offer made for a case
+	//pre: case must in awaiting arbs status and offer not accepted nor declined yet
+	//auth: arbitrator
+	ACTION dismissoffer(uint64_t case_id, uint64_t offer_id);
+
+	//Set the different languages the arbitrator will handle cases
+	//auth: arbitrator
 	ACTION setlangcodes(name arbitrator, vector<uint16_t> lang_codes);
 
+	//Set a new arbitrator status
+	//auth: arbitrator
 	ACTION newarbstatus(name arbitrator, uint8_t new_status);
 
+	//Recuse from a case
+	//post: Case is considered void and mistrial status is set
+	//auth: arbitrator
 	ACTION recuse(uint64_t case_id, string rationale, name assigned_arb);
 
 #pragma endregion Arb_Actions
@@ -288,7 +380,6 @@ CONTRACT arbitration : public eosio::contract
 #pragma region Test_Actions
 	
 #pragma endregion Test_Actions
-
 
 #pragma region System Structs
 
@@ -381,15 +472,17 @@ CONTRACT arbitration : public eosio::contract
 		string response_link; //NOTE: ipfs link to response document from respondant (if any)
 		time_point_sec claimant_limit_time;
 		bool claim_info_needed = false;
+		string claim_info_required;
 		time_point_sec respondant_limit_time;
 		bool response_info_needed = false;
+		string response_info_required;
 		uint8_t status = static_cast<uint8_t>(claim_status::FILED);
 		uint8_t claim_category;
 
 		uint64_t primary_key() const { return claim_id; }
 		EOSLIB_SERIALIZE(claim, (claim_id)(claim_summary)(decision_link)(response_link)
-		(claimant_limit_time)(claim_info_needed)(respondant_limit_time)(response_info_needed)
-		(status)(claim_category))
+		(claimant_limit_time)(claim_info_needed)(claim_info_required)(respondant_limit_time)
+		(response_info_needed)(response_info_required)(status)(claim_category))
 	};
 	typedef multi_index<name("claims"), claim> claims_table;
 
@@ -574,6 +667,8 @@ CONTRACT arbitration : public eosio::contract
 	string get_rand_ballot_name();
 
 	uint64_t tlosusdprice();
+
+	void notify_bp_accounts();
 
 #pragma endregion Helpers
 

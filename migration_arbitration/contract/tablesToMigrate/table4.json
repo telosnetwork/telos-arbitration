@@ -1,9 +1,0 @@
-{
-    "tableStruct": "arbitrator",
-    "supportTableStruct": "supportarbitrator",
-    "tableName": "arbitrators",
-    "supportTableName": "supportarbs",
-    "tableType": "arbitrators_table",
-    "supportTableType": "support_arbitrators_table"
-}
-

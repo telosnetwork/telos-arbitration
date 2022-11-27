@@ -63,8 +63,10 @@ describe("Set ruling Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -112,8 +114,10 @@ describe("Set ruling Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -198,8 +202,10 @@ describe("Set ruling Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })

@@ -73,7 +73,9 @@ describe("File Case Telos Arbitration Smart Contract Tests", () => {
             status: 1,
             claim_category: 3,
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: false,
+            response_info_required: '',
             claimant_limit_time: "1970-01-01T00:00:00.000",
             respondant_limit_time: "1970-01-01T00:00:00.000"
         })

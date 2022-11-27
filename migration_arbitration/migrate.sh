@@ -20,9 +20,9 @@ fi
 
 #network
 if [[ "$3" == "mainnet" ]]; then 
-    url=https://wax.greymass.com
+    url=https://telos.caleos.io
 elif [[ "$3" == "testnet" ]]; then
-    url=https://testnet.waxsweden.org     
+    url=https://testnet.telos.caleos.io     
 elif [[ "$3" == "local" ]]; then
     url=http://127.0.0.1:8888
 else
