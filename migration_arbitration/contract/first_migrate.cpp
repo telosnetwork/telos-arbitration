@@ -21,52 +21,34 @@ void arbitration::migrate(uint16_t counter, uint16_t max_number_rows) {
     casefiles_table casefiles(get_self(), get_self().value);
     /* END MODIFY */
 
-    bool migration_ended = false;
     
-    while (i < max_number_rows && !migration_ended) {
-        /* BEGIN MODIFY */
+    for(auto cf_itr = casefiles.begin(); cf_itr != casefiles.end(); ++cf_itr) {
+        claims_table claims(get_self(), cf_itr->case_id);
+        support_claims_table supportclaims(get_self(), cf_itr->case_id);
 
-        auto cf_itr = casefiles.begin();
-        if(cf_itr != casefiles.end()) {
-            claims_table claims(get_self(), cf_itr->case_id);
-            support_claims_table supportclaims(get_self(), cf_itr->case_id);
+        auto claim_itr = claims.begin();
+        while(claim_itr != claims.end()) {
+            supportclaims.emplace(get_self(), [&](auto& col) {
+                col.claim_id = claim_itr->claim_id;
+                col.claim_summary = claim_itr->claim_summary;
+                col.decision_link = claim_itr->decision_link;
+                col.response_link = claim_itr->response_link;
+                col.status = claim_itr->status;
+                col.claim_category = claim_itr->claim_category;
+                col.claimant_limit_time = claim_itr->claimant_limit_time;
+                col.respondant_limit_time = claim_itr->respondant_limit_time;
+                col.claim_info_needed = claim_itr->claim_info_needed;
+                col.response_info_needed = claim_itr->response_info_needed;
+            });
 
-            auto claim_itr = claims.begin();
-            while(claim_itr != claims.end()) {
-                supportclaims.emplace(get_self(), [&](auto& col) {
-                    col.claim_id = claim_itr->claim_id;
-                    col.claim_summary = claim_itr->claim_summary;
-                    col.decision_link = claim_itr->decision_link;
-                    col.response_link = claim_itr->response_link;
-                    col.status = claim_itr->status;
-                    col.claim_category = claim_itr->claim_category;
-                    col.claimant_limit_time = claim_itr->claimant_limit_time;
-                    col.respondant_limit_time = claim_itr->respondant_limit_time;
-                    col.claim_info_needed = claim_itr->claim_info_needed;
-                    col.response_info_needed = claim_itr->response_info_needed;
-                });
-
-                claim_itr = claims.erase(claim_itr);
-            }
-            //If multiple tables need to be migrating, add different else if conditions
-            //unless that the second table depends on the first one.
-
-        /* END MODIFY */
-        } else {
-            //In the final loop migrate Only singleton Tables
-            /* BEGIN MODIFY */
-            /* END MODIFY */
-
-            //Update the migration table by setting that the migration process has ended.       
-            migration _updated_migration;
-            _updated_migration.in_process = 2;
-            _updated_migration.migrating = true;
-            migrations.set(_updated_migration, get_self());
-
-            migration_ended = true;
+            claim_itr = claims.erase(claim_itr);
         }
-
-        ++i;
-    }
+    } 
+    
+    //Update the migration table by setting that the migration process has ended.       
+    migration _updated_migration;
+    _updated_migration.in_process = 2;
+    _updated_migration.migrating = true;
+    migrations.set(_updated_migration, get_self());
 }
 
