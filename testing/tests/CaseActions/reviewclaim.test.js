@@ -63,8 +63,10 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -79,7 +81,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 4
+            number_days_respondant: 4,
+            claim_info_required: "Updated claim",
+            response_info_required: "Updated response"
         },
             [{
               actor: user3.accountName,
@@ -95,7 +99,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             status: 2,
             claim_category: 1,
             claim_info_needed: true,
+            claim_info_required: 'Updated claim',
             response_info_needed: true,
+            response_info_required: 'Updated response',
             claimant_limit_time: "2000-01-05T00:00:00.000",
             respondant_limit_time: "2000-01-05T00:00:00.000"
         })
@@ -134,8 +140,10 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -147,7 +155,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -165,7 +175,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -183,7 +195,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user2.accountName,
@@ -199,7 +213,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -219,8 +235,10 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -232,7 +250,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -252,8 +272,10 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -265,7 +287,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -281,7 +305,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: false,
             response_info_needed: false,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "",
+            response_info_required: ""
         },
             [{
               actor: user3.accountName,
@@ -297,7 +323,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 0,
-            number_days_respondant: 1
+            number_days_respondant: 1,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -313,7 +341,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 0
+            number_days_respondant: 0,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -329,7 +359,9 @@ describe("Review claim Telos Arbitration Smart Contract Tests", () => {
             claim_info_needed: true,
             response_info_needed: true,
             number_days_claimant: 4,
-            number_days_respondant: 4
+            number_days_respondant: 4,
+            claim_info_required: "Claim info",
+            response_info_required: "Response info"
         },
             [{
               actor: user2.accountName,

@@ -302,13 +302,14 @@ CONTRACT arbitration : public eosio::contract
 	//Starts the case investigation period
 	//pre: case must be in arbs_assigned status
 	//auth: assigned arbitrator
-	ACTION startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant);
+	ACTION startcase(uint64_t case_id, name assigned_arb, uint8_t number_days_respondant, string response_info_required);
 
 	//Ask the respondant and the claimant to provide more information if needed
 	//pre: case must be in investigation status
 	//auth: assigned arbitrator
 	ACTION reviewclaim(uint64_t case_id, uint64_t claim_id, name assigned_arb, bool claim_info_needed, 
-	bool response_info_needed, uint8_t number_days_claimant, uint8_t number_days_respondant);
+	string claim_info_required, bool response_info_needed, string response_info_required,
+	uint8_t number_days_claimant, uint8_t number_days_respondant);
 
 	//Accepts or denies a claim of a particular case
 	//pre: case must be in investigation status
@@ -471,15 +472,17 @@ CONTRACT arbitration : public eosio::contract
 		string response_link; //NOTE: ipfs link to response document from respondant (if any)
 		time_point_sec claimant_limit_time;
 		bool claim_info_needed = false;
+		string claim_info_required;
 		time_point_sec respondant_limit_time;
 		bool response_info_needed = false;
+		string response_info_required;
 		uint8_t status = static_cast<uint8_t>(claim_status::FILED);
 		uint8_t claim_category;
 
 		uint64_t primary_key() const { return claim_id; }
 		EOSLIB_SERIALIZE(claim, (claim_id)(claim_summary)(decision_link)(response_link)
-		(claimant_limit_time)(claim_info_needed)(respondant_limit_time)(response_info_needed)
-		(status)(claim_category))
+		(claimant_limit_time)(claim_info_needed)(claim_info_required)(respondant_limit_time)
+		(response_info_needed)(response_info_required)(status)(claim_category))
 	};
 	typedef multi_index<name("claims"), claim> claims_table;
 

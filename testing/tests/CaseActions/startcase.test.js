@@ -75,8 +75,10 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -88,6 +90,7 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
             case_id: "0",
             assigned_arb: "user3",
             number_days_respondant: 10,
+            response_info_required: "Response info"
         }, [{
              actor: user3.accountName,
               permission: "active"
@@ -120,7 +123,9 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
             status: 1,
             claim_category: 1,
             claim_info_needed: false,
+            claim_info_required: '',
             response_info_needed: true,
+            response_info_required: 'Response info',
             claimant_limit_time: "2000-01-01T00:00:00.000",
             respondant_limit_time: "2000-01-11T00:00:00.000"
         })
@@ -133,7 +138,8 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
          await expect(arbitration.contract.startcase({
             case_id: "2",
             assigned_arb: "user3",
-            number_days_respondant: 10
+            number_days_respondant: 10,
+            response_info_required: "Response info"
          },
             [{
               actor: user3.accountName,
@@ -145,7 +151,8 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
         await expect(arbitration.contract.startcase({
             case_id: "0",
             assigned_arb: "user2",
-            number_days_respondant: 10
+            number_days_respondant: 10,
+            response_info_required: "Response info"
         },
             [{
               actor: user2.accountName,
@@ -186,8 +193,10 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
         })
@@ -195,7 +204,8 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
         await expect(arbitration.contract.startcase({
             case_id: "1",
             assigned_arb: "user3",
-            number_days_respondant: 10
+            number_days_respondant: 10,
+            response_info_required: "Response info"
         },
             [{
               actor: user3.accountName,
@@ -207,7 +217,8 @@ describe("Starts case Telos Arbitration Smart Contract Tests", () => {
         await expect(arbitration.contract.startcase({
             case_id: "0",
             assigned_arb: "user3",
-            number_days_respondant: 10
+            number_days_respondant: 10,
+            response_info_required: "Response info"
         },
             [{
               actor: user2.accountName,

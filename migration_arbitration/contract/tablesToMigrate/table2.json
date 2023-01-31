@@ -1,9 +1,0 @@
-{
-    "tableStruct": "casefile",
-    "supportTableStruct": "supportcasefile",
-    "tableName": "casefiles",
-    "supportTableName": "supportcf",
-    "tableType": "casefiles_table",
-    "supportTableType": "support_casefiles_table"
-}
-

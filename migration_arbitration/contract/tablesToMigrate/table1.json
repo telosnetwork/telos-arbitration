@@ -1,9 +1,9 @@
 {
-    "tableStruct": "config",
-    "supportTableStruct": "supportconf",
-    "tableName": "config",
-    "supportTableName": "supportconf",
-    "tableType": "config_singleton",
-    "supportTableType": "support_config_singleton"
+    "tableStruct": "claim",
+    "supportTableStruct": "supportclaim",
+    "tableName": "claims",
+    "supportTableName": "supportclaim",
+    "tableType": "claims_table",
+    "supportTableType": "support_claims_table"
 }
 

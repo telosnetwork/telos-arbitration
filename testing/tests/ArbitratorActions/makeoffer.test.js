@@ -63,8 +63,10 @@ describe("Make Offer Telos Arbitration Smart Contract Tests", () => {
                     claim_category: 1, 
                     claimant_limit_time: '2000-01-01T00:00:00.000',
                     claim_info_needed: false,
+                    claim_info_required: '',
                     respondant_limit_time: '2000-01-01T00:00:00.000',
                     response_info_needed: false,
+                    response_info_required: '',
                 }
             ]
          })
@@ -352,6 +354,66 @@ describe("Make Offer Telos Arbitration Smart Contract Tests", () => {
               actor: user3.accountName,
               permission: "active"
             }])).rejects.toThrow("The minimum estimated hours is 1");
+    });
+
+    it("fails if arbitrator is claimant", async () => {
+        await arbitration.loadFixtures("arbitrators", {
+            "arbitration": [
+                {   
+                    "arb": "user1",
+                    "arb_status": 1,
+                    "open_case_ids": ["0"],
+                    "closed_case_ids": [],
+                    "recused_case_ids": [],
+                    "credentials_link": "link",
+                    "elected_time": "1999-01-01T00:00:00.000",
+                    "term_expiration":"2001-01-01T00:00:00.000",
+                    "languages": [0,1]
+                }
+            ]
+        })
+
+        await expect(arbitration.contract.makeoffer({
+            case_id: "0",
+            offer_id: -1,
+            arbitrator: "user1",
+            hourly_rate: "10.0000 USD",
+            estimated_hours: 10,
+        },
+            [{
+              actor: user1.accountName,
+              permission: "active"
+            }])).rejects.toThrow("Arbitrator can not be neither claimant nor respondant");
+    });
+
+    it("fails if arbitrator is respondant", async () => {
+        await arbitration.loadFixtures("arbitrators", {
+            "arbitration": [
+                {   
+                    "arb": "user2",
+                    "arb_status": 1,
+                    "open_case_ids": ["0"],
+                    "closed_case_ids": [],
+                    "recused_case_ids": [],
+                    "credentials_link": "link",
+                    "elected_time": "1999-01-01T00:00:00.000",
+                    "term_expiration":"2001-01-01T00:00:00.000",
+                    "languages": [0,1]
+                }
+            ]
+        })
+
+        await expect(arbitration.contract.makeoffer({
+            case_id: "0",
+            offer_id: -1,
+            arbitrator: "user2",
+            hourly_rate: "10.0000 USD",
+            estimated_hours: 10,
+        },
+            [{
+              actor: user2.accountName,
+              permission: "active"
+            }])).rejects.toThrow("Arbitrator can not be neither claimant nor respondant");
     });
 
     it("fails if arbitrator has already made an offer", async () => {
